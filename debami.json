@@ -26,11 +26,21 @@
   "provisioners": [{
     "type": "shell",
     "inline": [
-      "sleep 30",
-      "sudo -i",
       "sleep 5",
       "sudo apt update && sudo apt -y upgrade",
-      "sudo apt install -y nginx ufw fail2ban selinux-basics selinux-policy-default auditd"
+      "sudo apt install -y nginx ufw fail2ban selinux-basics selinux-policy-default auditd",
+      "sudo ufw default deny incoming",
+      "sudo ufw default allow outgoing",
+      "sudo ufw allow ssh",
+      "sudo ufw allow http",
+      "sudo ufw allow https",
+      "yes | sudo ufw enable",
+      "sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local",
+      "sudo systemctl restart fail2ban",
+      "sudo systemctl enable nginx",
+      "sudo systemctl enable fail2ban",
+      "sudo systemctl enable ufw"
     ]
   }]
 }
+
