@@ -1,0 +1,36 @@
+{
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": ""
+  },
+
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "{{user `aws_access_key`}}",
+    "secret_key": "{{user `aws_secret_key`}}",
+    "region": "eu-central-1",
+    "source_ami_filter": {
+      "filters": {
+        "virtualization-type": "hvm",
+        "name": "debian-10-amd64-20191117-80",
+        "root-device-type": "ebs"
+      },
+      "owners": ["136693071363"],
+      "most_recent": true
+    },
+    "instance_type": "t2.micro",
+    "ssh_username": "admin",
+    "ami_name": "packer-example-deb10 {{timestamp}}"
+  }],
+
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+      "sleep 30",
+      "sudo -i",
+      "sleep 5",
+      "sudo apt update && sudo apt -y upgrade",
+      "sudo apt install -y nginx ufw fail2ban selinux-basics selinux-policy-default auditd"
+    ]
+  }]
+}
