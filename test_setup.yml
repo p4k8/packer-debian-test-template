@@ -1,0 +1,49 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+  - name: Install base packages
+    apt:
+      name:
+        - nginx
+        - ufw
+        - fail2ban
+        - selinux-basics
+        - selinux-policy-default
+        - auditd
+      state: present
+  - name: Set logging
+    ufw:
+      logging: 'on'
+  - name: enable UFW
+    ufw:
+      state: enabled
+      policy: deny
+  - ufw:
+      rule: allow
+      name: OpenSSH
+  - ufw:
+      rule: allow
+      port: 80
+  - ufw:
+      rule: allow
+      port: 443
+  - name: enable UFW
+    ufw:
+      state: enabled
+  - name: Copy file with owner and permissions
+    copy:
+      src: /etc/fail2ban/jail.conf
+      dest: /etc/fail2ban/jail.local
+  - name: Restart service httpd, in all cases
+    service:
+      name: fail2ban
+      state: restarted
+  - name: Enable service httpd, and not touch the state
+    service:
+      name: nginx
+      enabled: yes
+  - name: Enable service fail2ban , and not touch the state
+    service:
+      name: fail2ban
+      enabled: yes
