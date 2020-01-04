@@ -18,7 +18,7 @@
   "provisioners": [{
     "type": "shell",
     "inline": [
-      "sleep 5",
+      "/usr/bin/cloud-init status --wait",
       "sudo apt update && sudo apt -y upgrade",
       "sudo apt install -y ansible"
     ]
