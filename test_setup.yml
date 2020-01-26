@@ -52,3 +52,14 @@
     service:
       name: fail2ban
       enabled: yes
+
+  - name: Create directory for pulled repo
+    file: path=/var/lib/ansible/local state=directory owner=root group=root mode=0751
+
+  - name: Create crontab for ansible-pull
+    cron:
+      name: ansible pull
+      hour: "12"
+      user: root
+      job: "ansible-pull -d /var/lib/ansible/local -U git@github.com:p4k8/packer-deb>
+      cron_file: ansible_pull
